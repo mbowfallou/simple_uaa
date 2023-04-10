@@ -27,16 +27,23 @@ public class AppUserEntity {
 //    public int hashCode() {
 //        return Objects.hash(username, email);
 //    }
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "users_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Set<AppRoleEntity> roles = new HashSet<>();
-//
-//    public void addRole(AppRoleEntity role) {
-//        this.roles.add(role);
-//        //role.getUsers().add(this);
-//    }
+    @ManyToMany(fetch = FetchType.EAGER) // , cascade = CascadeType.ALL
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<AppRoleEntity> roles = new HashSet<>();
+
+    public void addRole(AppRoleEntity role) {
+        roles.add(role);
+    }
+
+    public void removeRole(AppRoleEntity role) {
+        roles.remove(role);
+    }
+
+    public void removeAllRoles() {
+        roles.clear();
+    }
 }

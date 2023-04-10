@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +39,10 @@ public class AppUserService {
 
     // Add a Student
     public StudentEntity addStudent(StudentEntity student){
-        //student.addRole(roleRepository.findByName("STUDENT"));
+        student.addRole(
+                roleRepository.findByNameIgnoreCase("STUDENT")
+                        .orElseThrow(() -> new RuntimeException("Le Rôle n'est pas trouvé"))
+        );
         if(userRepository.findByEmailIgnoreCase(student.getEmail()).isPresent()
                 || userRepository.findByUsernameIgnoreCase(student.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Les noms d'utilisateur et email sont uniques !");
@@ -54,7 +58,10 @@ public class AppUserService {
 
     // Add a Professor
     public ProfessorEntity addProfessor(ProfessorEntity professor){
-        //professor.addRole(roleRepository.findByName("STUDENT"));
+        professor.addRole(
+                roleRepository.findByNameIgnoreCase("PROFESSOR")
+                        .orElseThrow(() -> new RuntimeException("Le Rôle n'est pas trouvé"))
+        );
         if(userRepository.findByEmailIgnoreCase(professor.getEmail()).isPresent()
                 || userRepository.findByUsernameIgnoreCase(professor.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Les noms d'utilisateur et email sont uniques !");
